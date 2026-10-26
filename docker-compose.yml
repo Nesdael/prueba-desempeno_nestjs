@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: 'colocarNombre'
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - '${DB_PORT}:5432'
+    volumes:
+      - ColocarNombre:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  cotizaciones-api:
+    build: .
+    container_name: ColocarNombre
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      APP_PORT: ${APP_PORT}
+      APP_NODE: ${APP_NODE}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+      OBSERVE_APP_KEY: ${OBSERVE_APP_KEY}
+      OBSERVE_APP_SECRET: ${OBSERVE_APP_SECRET}
+      OBSERVE_SERVICE_ID: ${OBSERVE_SERVICE_ID}
+
+    ports:
+      - '${APP_PORT}:${APP_PORT}'
+
+volumes:
+  colocarNombre:
