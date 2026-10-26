@@ -1,8 +1,8 @@
 import z from 'zod';
 
 export const envValidationSchema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'production']),
-  PORT: z.coerce.number().int().positive(),
+  APP_NODE: z.enum(['development', 'test', 'production']),
+  APP_PORT: z.coerce.number().int().positive(),
   DB_HOST: z.string().min(1),
   DB_PORT: z.coerce.number().int().positive(),
   DB_USER: z.string().min(1),
@@ -23,5 +23,5 @@ export const validateEnv = (config: Record<string, unknown>) => {
     throw new Error(`Invalid environment variables: \n${details} `);
   }
 
-  return config;
+  return result.data;
 };

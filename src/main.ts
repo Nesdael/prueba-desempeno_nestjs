@@ -9,6 +9,6 @@ async function bootstrap() {
   const config = app.get(ConfigService);
   setupApp(app);
   swaggerConfiguration(app);
-  await app.listen(config.getOrThrow<number>('PORT'));
+  await app.listen(config.getOrThrow<number>('APP_PORT'));
 }
 await bootstrap();
