@@ -16,7 +16,7 @@ export class TransformInterceptor implements NestInterceptor {
       map((data) => ({
         success: true,
         data,
-        timeStamp: new Date().toISOString(),
+        timestamp: new Date().toISOString(),
       })),
     );
   }

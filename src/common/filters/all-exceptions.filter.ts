@@ -40,7 +40,7 @@ export class AllExceptionFilter implements ExceptionFilter {
       statusCode: status,
       message,
       path: request.url,
-      timestamp: new Date().toISOString,
+      timestamp: new Date().toISOString(),
     });
   }
 }
