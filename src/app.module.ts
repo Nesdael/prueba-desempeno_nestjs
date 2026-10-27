@@ -10,6 +10,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard.js';
 import { RolesGuard } from './common/guards/roles.guard.js';
 import { LoggerMiddleware } from './common/middleware/logger.middleware.js';
+import { AuthModule } from './modules/auth/auth.module.js';
+import { UsersModule } from './modules/users/users.module.js';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware.js';
       inject: [ConfigService],
       useFactory: databaseConfiguration,
     }),
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [
