@@ -7,10 +7,9 @@ export const swaggerConfiguration = (app: INestApplication): void => {
   const config = new DocumentBuilder()
     .setTitle('')
     .setDescription('')
-
     .setVersion('1.0')
+    .addBearerAuth()
     .addTag('')
-
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
