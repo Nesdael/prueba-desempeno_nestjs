@@ -4,5 +4,5 @@ import { IsBoolean } from 'class-validator';
 export class UpdateMechanicStatusDto {
   @ApiProperty({ example: false })
   @IsBoolean()
-  IsActive: boolean;
+  isActive: boolean;
 }

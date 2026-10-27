@@ -49,6 +49,6 @@ export class MechanicsController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateMechanicStatusDto,
   ) {
-    return this.mechanicsService.updateStatus(id, dto.IsActive);
+    return this.mechanicsService.updateStatus(id, dto.isActive);
   }
 }

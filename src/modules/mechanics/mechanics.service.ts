@@ -36,7 +36,19 @@ export class MechanicsService {
     });
   }
 
-  async findOne(userId: string): Promise<Mechanic> {
+  async findOne(id: string): Promise<Mechanic> {
+    const mechanic = await this.mechanicRepository.findOne({
+      where: { id },
+      relations: { user: true },
+    });
+    if (!mechanic) {
+      throw new NotFoundException(`Mechanic ${id} not found`);
+    }
+    return mechanic;
+  }
+
+  // Mecánico vinculado al usuario que inició sesión (para el técnico).
+  async findByUserId(userId: string): Promise<Mechanic> {
     const mechanic = await this.mechanicRepository.findOne({
       where: { user: { id: userId } },
     });
