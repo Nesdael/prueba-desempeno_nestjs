@@ -13,6 +13,7 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 import { WorkshopsModule } from './modules/workshops/workshops.module.js';
+import { VehiclesModule } from './modules/vehicles/vehicles.module.js';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { WorkshopsModule } from './modules/workshops/workshops.module.js';
     AuthModule,
     UsersModule,
     WorkshopsModule,
+    VehiclesModule,
   ],
   controllers: [AppController],
   providers: [
