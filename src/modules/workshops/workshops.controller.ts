@@ -43,6 +43,6 @@ export class WorkshopsController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() updateWorkshopDto: UpdateWorkshopStatusDto,
   ) {
-    return this.workshopsService.updateStatus(id, updateWorkshopDto.status);
+    return this.workshopsService.updateStatus(id, updateWorkshopDto.isActive);
   }
 }
