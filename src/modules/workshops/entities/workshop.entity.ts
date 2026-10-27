@@ -23,10 +23,10 @@ export class Workshop {
   isActive: boolean;
 
   @CreateDateColumn()
-  createAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updateAt: Date;
+  updatedAt: Date;
 
   @BeforeInsert()
   generateId() {

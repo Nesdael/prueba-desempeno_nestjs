@@ -32,7 +32,7 @@ export class User {
   createdAt: Date;
 
   @UpdateDateColumn()
-  updateAt: Date;
+  updatedAt: Date;
 
   @BeforeInsert()
   generarId() {
