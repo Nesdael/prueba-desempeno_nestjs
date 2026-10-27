@@ -9,6 +9,12 @@ import {
 import { Request, Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 
+/*
+  - GLobal exception filter
+  - Catches any error and reponds with a uniform format
+  - {success: false, statusCode, message, path, timestamp}
+  - Prevents known errors from reaching the client as 500
+*/
 @Catch()
 export class AllExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(AllExceptionFilter.name);
@@ -22,6 +28,7 @@ export class AllExceptionFilter implements ExceptionFilter {
     let message: string | string[] = 'Internal server error';
 
     if (exception instanceof HttpException) {
+      // Nest errors (400, 401, 403, 404...) their codes and messages are preserved
       status = exception.getStatus();
       const res = exception.getResponse();
       message = typeof res === 'string' ? res : (res as any).message;
@@ -29,9 +36,11 @@ export class AllExceptionFilter implements ExceptionFilter {
       exception instanceof QueryFailedError &&
       (exception.driverError as any)?.code === '23505'
     ) {
+      //Postgres 23505: duplicate value in a unique column(email, license plate...) A 409 reponse is returned
       status = HttpStatus.CONFLICT;
       message = 'Record already exists';
     } else {
+      // Unexpected error: LOgged to the console without revealing details to the client
       this.logger.error(exception);
     }
 
