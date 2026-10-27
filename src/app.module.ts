@@ -12,6 +12,7 @@ import { RolesGuard } from './common/guards/roles.guard.js';
 import { LoggerMiddleware } from './common/middleware/logger.middleware.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { UsersModule } from './modules/users/users.module.js';
+import { WorkshopsModule } from './modules/workshops/workshops.module.js';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { UsersModule } from './modules/users/users.module.js';
     }),
     AuthModule,
     UsersModule,
+    WorkshopsModule,
   ],
   controllers: [AppController],
   providers: [
