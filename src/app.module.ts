@@ -15,6 +15,7 @@ import { UsersModule } from './modules/users/users.module.js';
 import { WorkshopsModule } from './modules/workshops/workshops.module.js';
 import { VehiclesModule } from './modules/vehicles/vehicles.module.js';
 import { MechanicsModule } from './modules/mechanics/mechanics.module.js';
+import { MaintenancesModule } from './modules/maintenances/maintenances.module.js';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { MechanicsModule } from './modules/mechanics/mechanics.module.js';
     WorkshopsModule,
     VehiclesModule,
     MechanicsModule,
+    MaintenancesModule,
   ],
   controllers: [AppController],
   providers: [
