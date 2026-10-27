@@ -18,7 +18,7 @@ export class TransformInterceptor implements NestInterceptor {
     next: CallHandler<any>,
   ): Observable<unknown> {
     // HTTP status code that Nest assigned to the response (200, 201.... )
-    const statusCode = context.switchToHttp().getRequest().statusCode;
+    const statusCode = context.switchToHttp().getResponse().statusCode;
     // next.handle() executes the controller; map transforms its reponse
     return next.handle().pipe(
       map((data) => ({
