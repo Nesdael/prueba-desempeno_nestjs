@@ -1,7 +1,16 @@
 import { Exclude } from 'class-transformer';
-import { Column, CreateDateColumn, PrimaryColumn } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Role } from '../../../common/enum/role.enum.js';
+import { v7 as uuidv7 } from 'uuid';
 
+@Entity('users')
 export class User {
   @PrimaryColumn('uuid')
   id: string;
@@ -22,6 +31,13 @@ export class User {
   @CreateDateColumn()
   createdAt: Date;
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   updateAt: Date;
+
+  @BeforeInsert()
+  generarId() {
+    if (!this.id) {
+      this.id = uuidv7();
+    }
+  }
 }
