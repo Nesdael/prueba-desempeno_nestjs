@@ -23,7 +23,7 @@ export class ApiKeyGuard implements CanActivate {
 
     // No header or a key not in the list: 401
     if (!apiKey || !validKeys.includes(apiKey)) {
-      throw new UnauthorizedException('invalid or missing API kay');
+      throw new UnauthorizedException('invalid or missing API key');
     }
     return true;
   }

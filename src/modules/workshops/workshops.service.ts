@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateWorkshopDto } from './dto/create-workshop.dto.js';
-import { UpdateWorkshopStatusDto } from './dto/update-workshop-status.dto.js';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Workshop } from './entities/workshop.entity.js';
 import { Repository } from 'typeorm';
