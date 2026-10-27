@@ -14,4 +14,8 @@ export const EnvConfig = () => ({
     secret: process.env.JWT_SECRET,
     expiresIn: Number(process.env.JWT_EXPIRES_IN ?? 3600),
   },
+  apiKeys: (process.env.API_KEYS ?? '')
+    .split(',')
+    .map((key) => key.trim())
+    .filter(Boolean),
 });

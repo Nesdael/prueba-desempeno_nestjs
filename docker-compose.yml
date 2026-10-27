@@ -34,6 +34,7 @@ services:
       DB_NAME: ${DB_NAME}
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      API_KEYS: ${API_KEYS}
     ports:
       - '${APP_PORT}:${APP_PORT}'
 
