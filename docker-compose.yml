@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: 'colocarNombre'
+    container_name: contenedor-prueba
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -10,7 +10,7 @@ services:
     ports:
       - '${DB_PORT}:5432'
     volumes:
-      - ColocarNombre:/var/lib/postgresql/data
+      - prueba:/var/lib/postgresql/data
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
       interval: 5s
@@ -19,7 +19,7 @@ services:
 
   cotizaciones-api:
     build: .
-    container_name: ColocarNombre
+    container_name: contenedor-prueba-api
     restart: unless-stopped
     depends_on:
       postgres:
@@ -32,12 +32,10 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_NAME: ${DB_NAME}
-      OBSERVE_APP_KEY: ${OBSERVE_APP_KEY}
-      OBSERVE_APP_SECRET: ${OBSERVE_APP_SECRET}
-      OBSERVE_SERVICE_ID: ${OBSERVE_SERVICE_ID}
-
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
     ports:
       - '${APP_PORT}:${APP_PORT}'
 
 volumes:
-  colocarNombre:
+  prueba:
