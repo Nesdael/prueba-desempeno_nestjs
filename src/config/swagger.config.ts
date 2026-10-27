@@ -9,6 +9,7 @@ export const swaggerConfiguration = (app: INestApplication): void => {
     .setDescription('')
     .setVersion('1.0')
     .addBearerAuth()
+    .addApiKey({ type: 'apiKey', name: 'x-api-key', in: 'header' }, 'x-api-key')
     .addTag('')
     .build();
 
