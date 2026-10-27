@@ -9,13 +9,14 @@ import {
 } from 'class-validator';
 import { Role } from '../../../common/enum/role.enum.js';
 import { Transform } from 'class-transformer';
+import { ToLowerCase } from '../../../common/decorators/text-case.decorator.js';
 
 export class RegisterDto {
   @IsString()
   @IsNotEmpty()
   name: string;
 
-  @Transform(({ value }) => value?.trim().toLowerCase())
+  @ToLowerCase()
   @IsEmail()
   email: string;
 
