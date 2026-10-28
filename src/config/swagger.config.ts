@@ -7,7 +7,7 @@ export const swaggerConfiguration = (app: INestApplication): void => {
   const config = new DocumentBuilder()
     .setTitle('FleetCore API')
     .setDescription(
-      'Fleet maintenance management API: vehicles, mechanics, worshops and maintenances',
+      'Fleet maintenance management API: vehicles, mechanics, workshops and maintenances',
     )
     .setVersion('1.0')
     .addBearerAuth()

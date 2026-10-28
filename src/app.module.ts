@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppService } from './app.service.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EnvConfig } from './config/env.config.js';
 import { validateEnv } from './config/env.validation.schema.js';
@@ -37,7 +36,6 @@ import { MaintenancesModule } from './modules/maintenances/maintenances.module.j
   ],
   controllers: [],
   providers: [
-    AppService,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
