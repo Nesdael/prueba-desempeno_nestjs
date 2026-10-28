@@ -45,6 +45,7 @@ export class VehiclesController {
     return this.vehiclesService.findAll();
   }
 
+  @Auth()
   @Get(':term')
   findOne(@Param('term') id: string) {
     return this.vehiclesService.findByIdOrPlate(id);

@@ -5,12 +5,13 @@ const logger = new Logger('Swagger');
 
 export const swaggerConfiguration = (app: INestApplication): void => {
   const config = new DocumentBuilder()
-    .setTitle('')
-    .setDescription('')
+    .setTitle('FleetCore API')
+    .setDescription(
+      'Fleet maintenance management API: vehicles, mechanics, worshops and maintenances',
+    )
     .setVersion('1.0')
     .addBearerAuth()
     .addApiKey({ type: 'apiKey', name: 'x-api-key', in: 'header' }, 'x-api-key')
-    .addTag('')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
