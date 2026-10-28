@@ -34,7 +34,7 @@ export class MaintenancesController {
     return this.maintenancesService.findAll();
   }
 
-  // Las rutas fijas van antes de ':id' para que Nest no las tome como un id.
+  // Fixed routes come before ‘:id’ so that Nest doesn't interpret them as an ID.
   @Auth(Role.ADMIN)
   @Get('active')
   findActive() {

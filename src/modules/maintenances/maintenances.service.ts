@@ -20,11 +20,11 @@ import {
 import { VehicleStatus } from '../../common/enum/vehicle-status.enum.js';
 import { Role } from '../../common/enum/role.enum.js';
 
-// Datos del usuario autenticado que vienen en el JWT.
+// Authenticated user data contained in the JWT.
 type AuthUser = { sub: string; role: Role };
 
-// Transiciones permitidas: estado actual -> estados a los que puede pasar.
-// COMPLETED y CANCELLED son finales: no pueden cambiar a ningún otro estado.
+// Allowed transitions: current state -> states it can transition to.
+// COMPLETED and CANCELLED are final states: they cannot transition to any other state.
 const ALLOWED_TRANSITIONS: Record<MaintenanceStatus, MaintenanceStatus[]> = {
   [MaintenanceStatus.SCHEDULED]: [
     MaintenanceStatus.IN_PROGRESS,
@@ -53,16 +53,18 @@ export class MaintenancesService {
     const start = new Date(dto.scheduledStart);
     const end = new Date(dto.scheduledEnd);
     if (start >= end) {
-      throw new BadRequestException('scheduledEnd must be after scheduledStart');
+      throw new BadRequestException(
+        'scheduledEnd must be after scheduledStart',
+      );
     }
 
-    // 1. El vehículo debe existir y no estar INACTIVE.
+    // 1. The vehicle must exist and not be INACTIVE.
     const vehicle = await this.vehiclesService.findByIdOrPlate(dto.vehicleId);
     if (vehicle.status === VehicleStatus.INACTIVE) {
       throw new ConflictException(`Vehicle ${vehicle.plate} is inactive`);
     }
 
-    // 2. El mecánico y el taller deben existir y estar activos.
+    // 2. The mechanic and the repair shop must exist and be active.
     const mechanic = await this.mechanicsService.findOne(dto.mechanicId);
     if (!mechanic.isActive) {
       throw new ConflictException(`Mechanic ${mechanic.name} is inactive`);
@@ -73,14 +75,14 @@ export class MaintenancesService {
       throw new ConflictException(`Workshop ${workshop.name} is inactive`);
     }
 
-    // 3. El kilometraje no puede ser menor al actual del vehículo.
+    // 3. The mileage cannot be less than the vehicle's current mileage.
     if (dto.mileage < vehicle.mileage) {
       throw new BadRequestException(
         `Mileage ${dto.mileage} is lower than the vehicle's current mileage (${vehicle.mileage})`,
       );
     }
 
-    // 4. Un vehículo no puede tener más de un mantenimiento activo.
+    // 4. A vehicle cannot have more than one active maintenance job.
     const vehicleBusy = await this.maintenanceRepository.exists({
       where: {
         vehicle: { id: vehicle.id },
@@ -93,9 +95,9 @@ export class MaintenancesService {
       );
     }
 
-    // 5. El mecánico no puede tener otro mantenimiento activo con horario cruzado,
-    //    en ningún taller. Dos rangos se cruzan si uno empieza antes de que el
-    //    otro termine y termina después de que el otro empiece.
+    // 5. The mechanic cannot have another active maintenance job with overlapping schedules,
+    //    at any repair shop. Two shifts overlap if one begins before the
+    //    other ends and ends after the other begins.
     const overlap = await this.maintenanceRepository.findOne({
       where: {
         mechanic: { id: mechanic.id },
@@ -141,13 +143,13 @@ export class MaintenancesService {
     return this.findMany({ mechanic: { id: mechanicId } });
   }
 
-  // Mantenimientos asignados al técnico que inició sesión.
+  // Maintenance jobs assigned to the logged-in technician.
   async findMine(userId: string): Promise<Maintenance[]> {
     const mechanic = await this.mechanicsService.findByUserId(userId);
     return this.findMany({ mechanic: { id: mechanic.id } });
   }
 
-  // Historial: mantenimientos completados del vehículo, del más reciente al más antiguo.
+  // History: completed maintenance jobs for the vehicle, from most recent to oldest.
   async findHistory(vehicleId: string) {
     const vehicle = await this.vehiclesService.findByIdOrPlate(vehicleId);
     const maintenances = await this.maintenanceRepository.find({
@@ -182,14 +184,14 @@ export class MaintenancesService {
     const current = maintenance.status;
     const next = dto.status;
 
-    // 1. Validar que la transición esté permitida.
+    // 1. Verify that the transition is allowed.
     if (!ALLOWED_TRANSITIONS[current].includes(next)) {
       throw new BadRequestException(
         `Invalid status transition from ${current} to ${next}`,
       );
     }
 
-    // 2. Reglas propias de cada estado de destino.
+    // 2. Rules specific to each destination state.
     if (next === MaintenanceStatus.IN_PROGRESS) {
       await this.validateStart(maintenance);
     }
@@ -199,7 +201,7 @@ export class MaintenancesService {
 
     maintenance.status = next;
 
-    // 3. Estado del vehículo según el nuevo estado del mantenimiento.
+    // 3. Vehicle status based on the new maintenance status.
     const vehicle = maintenance.vehicle;
     if (next === MaintenanceStatus.IN_PROGRESS) {
       vehicle.status = VehicleStatus.IN_MAINTENANCE;
@@ -213,8 +215,8 @@ export class MaintenancesService {
       vehicle.status = VehicleStatus.AVAILABLE;
     }
 
-    // 4. Transacción: el mantenimiento y el vehículo se guardan juntos.
-    //    Si alguno de los dos falla, ninguno queda guardado.
+    // 4. Transaction: The maintenance and the vehicle are saved together.
+    //    If either one fails, neither is saved.
     await this.dataSource.transaction(async (manager) => {
       await manager.save(vehicle);
       await manager.save(maintenance);
@@ -223,7 +225,7 @@ export class MaintenancesService {
     return maintenance;
   }
 
-  // Un técnico solo puede ver y modificar los mantenimientos que tiene asignados.
+  // A technician can only view and modify the maintenance tasks assigned to them.
   private checkOwnership(maintenance: Maintenance, user: AuthUser) {
     if (
       user.role === Role.TECHNICIAN &&
@@ -240,7 +242,7 @@ export class MaintenancesService {
       );
     }
 
-    // Un técnico no puede tener dos mantenimientos IN_PROGRESS al mismo tiempo.
+    // A technician cannot have two IN_PROGRESS maintenance tasks at the same time.
     const mechanicBusy = await this.maintenanceRepository.exists({
       where: {
         mechanic: { id: maintenance.mechanic.id },
@@ -254,7 +256,7 @@ export class MaintenancesService {
     }
   }
 
-  // Para completar se exigen los cuatro datos de cierre.
+  // To complete the process, the four closing figures are required.
   private applyClosingData(
     maintenance: Maintenance,
     dto: UpdateMaintenanceStatusDto,
