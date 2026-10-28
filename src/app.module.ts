@@ -1,5 +1,4 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EnvConfig } from './config/env.config.js';
@@ -36,7 +35,7 @@ import { MaintenancesModule } from './modules/maintenances/maintenances.module.j
     MechanicsModule,
     MaintenancesModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
     AppService,
     {
