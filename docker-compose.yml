@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: contenedor-prueba
+    container_name: fleetcore-db
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${DB_USER}
@@ -10,16 +10,18 @@ services:
     ports:
       - '${DB_PORT}:5432'
     volumes:
-      - prueba:/var/lib/postgresql/data
+      - fleetcore-data:/var/lib/postgresql/data
+    networks:
+      - fleetcore-network
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
       interval: 5s
       timeout: 5s
       retries: 10
 
-  cotizaciones-api:
+  api:
     build: .
-    container_name: contenedor-prueba-api
+    container_name: fleetcore-api
     restart: unless-stopped
     depends_on:
       postgres:
@@ -37,6 +39,11 @@ services:
       API_KEYS: ${API_KEYS}
     ports:
       - '${APP_PORT}:${APP_PORT}'
+    networks:
+      - fleetcore-network
 
 volumes:
-  prueba:
+  fleetcore-data:
+
+networks:
+  fleetcore-network:
